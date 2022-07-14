@@ -32,13 +32,15 @@ type MailConfig struct {
 	Pass string
 	To   string
 	Smtp string
+	Port string
 }
 
 func (cfg *MailConfig) DeclFlag() {
-	flag.StringVar(&cfg.From, "cfg.mail.from", "", "Email ID which will send mail")
-	flag.StringVar(&cfg.Pass, "cfg.mail.pass", "", "Password of from Email id")
-	flag.StringVar(&cfg.To, "cfg.mail.to", "", "The mail id where want to send mail")
-	flag.StringVar(&cfg.Smtp, "cfg.mail.smtp", "", "The SMTP service name")
+	flag.StringVar(&cfg.From, "cfg.mail.from", "prithvirathore.learn@gmail.com", "Email ID which will send mail")
+	flag.StringVar(&cfg.Pass, "cfg.mail.pass", "123", "Password of from Email id")
+	flag.StringVar(&cfg.To, "cfg.mail.to", "prithvirathore99@gmail.com", "The mail id where want to send mail")
+	flag.StringVar(&cfg.Smtp, "cfg.mail.smtp", "smtp.gmail.com", "The SMTP service name")
+	flag.StringVar(&cfg.Port, "cfg.mail.port", "587", "The SMTP port")
 
 }
 func (cfg *Config) DeclFlag() {

@@ -5,22 +5,22 @@ import (
 	"fmt"
 	"html/template"
 	"net/smtp"
+
+	"github.com/Prithvipal/sailpoint/config"
 )
 
 func SendMail(prs []PullRequest) {
-	from := "prithvirathore.learn@gmail.com"
-	password := ""
+	cfg := config.GetConfig()
+	from := cfg.Mail.From
+	password := cfg.Mail.Pass
 
-	toEmailAddress := "prithvirathore99@gmail.com"
+	toEmailAddress := cfg.Mail.To
 	to := []string{toEmailAddress}
 
-	host := "smtp.gmail.com"
-	port := "587"
+	host := cfg.Mail.Smtp
+	port := cfg.Mail.Port
 	address := host + ":" + port
 
-	// subject := "Subject: This is the subject of the mail\n"
-	// body := "This is the body of the mail"
-	// message := []byte(subject + body)
 	body := getMsg(prs)
 
 	auth := smtp.PlainAuth("", from, password, host)
