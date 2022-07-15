@@ -9,5 +9,5 @@ image: build
 
 .PHONY: run
 run: image
-	docker run sailpoint  -cfg.mail.pass='lceromihdyikiyon'
+	docker run sailpoint  -cfg.mail.pass=''
 
