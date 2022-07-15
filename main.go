@@ -1,17 +1,14 @@
 package main
 
 import (
-	"fmt"
-
 	"github.com/Prithvipal/sailpoint/config"
 	"github.com/Prithvipal/sailpoint/jobs"
+	"github.com/sirupsen/logrus"
 )
 
 func main() {
 	cfg := config.GetConfig()
-
 	cfg.DeclFlag()
-	fmt.Println(cfg.Git.Owner)
-	fmt.Println(cfg.Git.URL)
+	logrus.SetLevel(3)
 	jobs.Start()
 }

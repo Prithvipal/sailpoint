@@ -7,9 +7,10 @@ import (
 	"net/smtp"
 
 	"github.com/Prithvipal/sailpoint/config"
+	"github.com/sirupsen/logrus"
 )
 
-func SendMail(prs []PullRequest) {
+func SendMail(prs []PullRequest) error {
 	cfg := config.GetConfig()
 	from := cfg.Mail.From
 	password := cfg.Mail.Pass
@@ -21,26 +22,34 @@ func SendMail(prs []PullRequest) {
 	port := cfg.Mail.Port
 	address := host + ":" + port
 
-	body := getMsg(prs)
+	body, err := getMsg(prs)
+	if err != nil {
+		return err
+	}
 
 	auth := smtp.PlainAuth("", from, password, host)
 
-	err := smtp.SendMail(address, auth, from, to, body.Bytes())
-	if err != nil {
-		panic(err)
-	}
+	return smtp.SendMail(address, auth, from, to, body.Bytes())
+
 }
 
-func getMsg(prs []PullRequest) bytes.Buffer {
+func getMsg(prs []PullRequest) (bytes.Buffer, error) {
 	var msg bytes.Buffer
 	mimeHeaders := "MIME-version: 1.0;\nContent-Type: text/html; charset=\"UTF-8\";\n\n"
-	msg.Write([]byte(fmt.Sprintf("Subject: Pull Request status \n%s\n\n", mimeHeaders)))
-	body := getContent(prs)
-	msg.Write(body.Bytes())
-	return msg
+	_, err := msg.Write([]byte(fmt.Sprintf("Subject: Pull Request status \n%s\n\n", mimeHeaders)))
+	if err != nil {
+		logrus.Error("error while writing subject to buffer", err)
+		return msg, err
+	}
+	body, err := getContent(prs)
+	if err != nil {
+		return msg, err
+	}
+	_, err = msg.Write(body.Bytes())
+	return msg, err
 }
 
-func getContent(prs []PullRequest) bytes.Buffer {
+func getContent(prs []PullRequest) (bytes.Buffer, error) {
 	tmplTxt := `
 	<!DOCTYPE html>
 	<html>
@@ -69,9 +78,11 @@ func getContent(prs []PullRequest) bytes.Buffer {
 	`
 
 	tmpl := template.New("mail_tmpl")
-	t, _ := tmpl.Parse(tmplTxt)
+	t, err := tmpl.Parse(tmplTxt)
+	if err != nil {
+		logrus.Error("error while parsing mail template", err)
+	}
 	var body bytes.Buffer
-	t.Execute(&body, prs)
-
-	return body
+	err = t.Execute(&body, prs)
+	return body, err
 }
