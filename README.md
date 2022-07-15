@@ -8,7 +8,7 @@ make run <from-email-password>
 
 ## Args
 
-- `cfg.mail.from`: Email ID which will send mail. **Default:**prithvirathore.learn@gmail.com
+- `cfg.mail.from`: Email ID which will send mail. **Default:** prithvirathore.learn@gmail.com
 - `cfg.mail.pass`: Password of from Email id. **Default:** 123
 - `cfg.mail.to` The mail id where want to send mail. **Default:** prithvirathore99@gmail.com
 - `cfg.mail.smtp` The SMTP service name. **Default:** smtp.gmail.com
